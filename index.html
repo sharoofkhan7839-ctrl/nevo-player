@@ -507,15 +507,86 @@
         }
 
         @media (max-width: 768px) {
-            .download-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+            header {
+                padding: 0.8rem 1rem;
+            }
+            .nav-links .nav-link {
+                display: none;
+            }
+            .nav-links {
+                gap: 1rem;
+            }
+            .hero {
+                padding: 5rem 1rem 3rem 1rem;
+            }
+            .hero-logo-large {
+                width: 75px;
+                height: 75px;
+                margin-bottom: 1.5rem;
             }
             .hero h1 {
-                font-size: 2.8rem;
+                font-size: 2.5rem;
+            }
+            .hero-tagline {
+                font-size: 1.4rem;
+            }
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            .hero-btns {
+                flex-direction: column;
+                width: 100%;
+                max-width: 320px;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.85rem 1.5rem;
+            }
+            .features {
+                padding: 4rem 1rem;
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+            .section-desc {
+                font-size: 1rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+            .feature-card {
+                padding: 1.75rem 1.25rem;
+            }
+            .screenshots {
+                padding: 4rem 1rem;
+            }
+            .screenshots-container {
+                gap: 1.5rem;
+            }
+            .screenshot-frame {
+                max-width: 280px;
+            }
+            .download-section {
+                padding: 4rem 1rem;
             }
             .download-box {
-                padding: 2.5rem 1.5rem;
+                padding: 2.5rem 1.25rem;
+            }
+            .download-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+            .download-card {
+                padding: 1.75rem 1rem;
+            }
+            footer {
+                padding: 2.5rem 1rem;
+            }
+            .footer-links {
+                gap: 1.25rem;
             }
         }
 
