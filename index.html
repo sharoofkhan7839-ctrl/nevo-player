@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nevo Player - The Ultimate Media Player</title>
+    <meta name="description" content="Download Nevo Player for Android. The ultimate media player supporting FHD/HD/SD video playback, music with visualizer, URL streaming, and AMOLED dark mode.">
+    <!-- Google Fonts: Outfit (headings) & Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #0d0d12;
+            --accent-color: #7B2FBE;
+            --accent-glow: #aa6fe3;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-color: #221a30;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Ambient Glow Backgrounds */
+        .ambient-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(123, 47, 190, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            top: -100px;
+            right: -50px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        .ambient-glow-left {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(182, 102, 210, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+            bottom: 20%;
+            left: -150px;
+            z-index: 0;
+            pointer-events: none;
+            filter: blur(50px);
+        }
+
+        /* Header / Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color), #b666d2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(123, 47, 190, 0.5);
+            transition: var(--transition);
+        }
+
+        .logo-icon svg {
+            fill: #fff;
+            width: 18px;
+            height: 18px;
+            margin-left: 2px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 40%, #e2d5f3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-container:hover .logo-icon {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(182, 102, 210, 0.8);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+            text-shadow: 0 0 8px rgba(182, 102, 210, 0.4);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #903fd1 100%);
+            color: var(--text-main);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(123, 47, 190, 0.3);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(123, 47, 190, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 8rem 2rem 5rem 2rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .hero-logo-large {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #b666d2 100%);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 35px rgba(123, 47, 190, 0.6);
+            margin-bottom: 2rem;
+            animation: pulse-glow 3s infinite alternate;
+        }
+
+        .hero-logo-large svg {
+            fill: #fff;
+            width: 38px;
+            height: 38px;
+            margin-left: 4px;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 25px rgba(123, 47, 190, 0.5);
+            }
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 0 45px rgba(182, 102, 210, 0.8);
+            }
+        }
+
+        .badge {
+            background: rgba(123, 47, 190, 0.15);
+            border: 1px solid rgba(182, 102, 210, 0.3);
+            color: #d8b4fe;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(180deg, #ffffff 30%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-tagline {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #d8b4fe;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(182, 102, 210, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Common Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            font-family: 'Outfit', sans-serif;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #903fd1 100%);
+            color: var(--text-main);
+            border: none;
+            box-shadow: 0 0 25px rgba(123, 47, 190, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px rgba(123, 47, 190, 0.7);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(123, 47, 190, 0.05);
+            border-color: rgba(182, 102, 210, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .btn-subtext {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        /* Features Section */
+        .features {
+            position: relative;
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            z-index: 10;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(800px circle at var(--x, 0px) var(--y, 0px), rgba(123, 47, 190, 0.08), transparent 40%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(123, 47, 190, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(123, 47, 190, 0.1);
+        }
+
+        .feature-icon-wrapper {
+            width: 54px;
+            height: 54px;
+            background: rgba(123, 47, 190, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(123, 47, 190, 0.2);
+            color: var(--accent-glow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: rgba(123, 47, 190, 0.25);
+            color: #d8b4fe;
+            box-shadow: 0 0 15px rgba(123, 47, 190, 0.3);
+            transform: scale(1.05);
+        }
+
+        .feature-icon-wrapper svg {
+            width: 26px;
+            height: 26px;
+            fill: currentColor;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, #000000 0%, #050508 50%, #000000 100%);
+            position: relative;
+            z-index: 10;
+        }
+
+        .screenshots-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .screenshot-frame {
+            background: #09090b;
+            border: 4px solid #18181b;
+            border-radius: 36px;
+            padding: 10px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(123, 47, 190, 0.15);
+            max-width: 320px;
+            width: 100%;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screenshot-frame:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(123, 47, 190, 0.5);
+            box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(123, 47, 190, 0.3);
+        }
+
+        .screenshot-frame img {
+            width: 100%;
+            height: auto;
+            border-radius: 28px;
+            display: block;
+            background-color: #000;
+        }
+
+        /* Downloads Section */
+        .download-section {
+            padding: 6rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            z-index: 10;
+            position: relative;
+        }
+
+        .download-box {
+            background: linear-gradient(135deg, #09090d 0%, #0e0a16 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3.5rem 3rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(123, 47, 190, 0.1);
+            position: relative;
+        }
+
+        .download-box::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(135deg, rgba(123, 47, 190, 0.4), transparent 50%, rgba(182, 102, 210, 0.3));
+            border-radius: 24px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            color: #c084fc;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .download-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            .download-box {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+
+        .download-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .download-card:hover {
+            background: rgba(123, 47, 190, 0.03);
+            border-color: rgba(123, 47, 190, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .download-card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .download-card .meta-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .download-card .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            text-align: center;
+            background-color: #000;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-decoration: none;
+        }
+
+        .footer-logo svg {
+            width: 24px;
+            height: 24px;
+            fill: #7B2FBE;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--text-main);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #221235;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-left"></div>
+
+    <!-- Header Navigation -->
+    <header>
+        <a href="#" class="logo-container">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </div>
+            <span class="logo-text">Nevo Player</span>
+        </a>
+        <nav class="nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#screenshots" class="nav-link">Screenshots</a>
+            <a href="#download" class="nav-btn">Download Now</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-logo-large">
+            <svg viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+        </div>
+        <span class="badge">Stable Release v1.0.0</span>
+        <h1>Nevo Player</h1>
+        <p class="hero-tagline">The Ultimate Media Player</p>
+        <p>Experience ultra-smooth FHD/HD/SD video playback, an immersive music player with built-in visualizer, and instant network URL streaming on your Android device.</p>
+        <div class="hero-btns">
+            <a href="#download" class="btn btn-primary">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+                </svg>
+                <div>
+                    Get Nevo Player
+                    <span class="btn-subtext">Free APK Direct Download</span>
+                </div>
+            </a>
+            <a href="#features" class="btn btn-secondary">
+                Explore Features
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Engineered For Performance</h2>
+            <p class="section-desc">Designed with core performance in mind, Nevo Player delivers a comprehensive suite of premium features.</p>
+        </div>
+        <div class="features-grid">
+            <!-- Feature 1: Video Player -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 3H3c-1.11 0-2 .89-2 2v14c0 1.1.89 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.11-.9-2-2-2zm-9 14.5l-6-4.5 6-4.5v9z"/>
+                    </svg>
+                </div>
+                <h3>Video Playback</h3>
+                <p>Support for crystal-clear FHD, HD, and SD content with hardware acceleration, responsive gesture controls, and ratio matching.</p>
+            </div>
+            <!-- Feature 2: Music Player -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                    </svg>
+                </div>
+                <h3>Music & Visualizer</h3>
+                <p>Listen to your favorite audio tracks offline, complete with an elegant, responsive music visualizer that flows with the rhythm.</p>
+            </div>
+            <!-- Feature 3: URL/Stream -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+                    </svg>
+                </div>
+                <h3>Stream Network URLs</h3>
+                <p>Play web URLs, live video streams, and remote HTTP channels directly inside the app with zero buffering lag.</p>
+            </div>
+            <!-- Feature 4: AMOLED Theme -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+                    </svg>
+                </div>
+                <h3>AMOLED Black Theme</h3>
+                <p>Save battery on OLED displays and reduce eye strain with our meticulously crafted pure black dark theme.</p>
+            </div>
+            <!-- Feature 5: Continue Watching -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/>
+                    </svg>
+                </div>
+                <h3>Continue Watching</h3>
+                <p>Resumes playback precisely where you closed the app. Never lose track of your movie or playlist progress.</p>
+            </div>
+            <!-- Feature 6: Folders -->
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                    </svg>
+                </div>
+                <h3>Folder Management</h3>
+                <p>Intelligent, fast scanning of local directories. Navigate folders, group files, and hide unnecessary directories.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="section-header">
+            <h2 class="section-title">Stunning Interface</h2>
+            <p class="section-desc">Experience an interface designed to showcase your media without distractions.</p>
+        </div>
+        <div class="screenshots-container">
+            <div class="screenshot-frame">
+                <img src="screen.png" alt="Nevo Player Video List Screenshot">
+            </div>
+            <div class="screenshot-frame">
+                <img src="screen2.png" alt="Nevo Player Player Screen Screenshot">
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download-section" id="download">
+        <div class="download-box">
+            <span class="version-badge">Version 1.0.0 (Latest Stable)</span>
+            <h2 class="section-title" style="font-size: 2.3rem;">Get Nevo Player Today</h2>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem auto;">Select the architecture matching your Android device. For all devices built in the last 6-8 years, we highly recommend the 64-bit version.</p>
+            
+            <div class="download-grid">
+                <!-- 64-bit -->
+                <div class="download-card">
+                    <h4>64-Bit Version</h4>
+                    <span class="meta-info">Size: ~54.5 MB | Android 8.0+ (Newer Phones)</span>
+                    <a href="NevoPlayer_64bit.apk" download="NevoPlayer_64bit.apk" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+                        </svg>
+                        Download 64-Bit APK
+                    </a>
+                </div>
+                <!-- 32-bit -->
+                <div class="download-card">
+                    <h4>32-Bit Version</h4>
+                    <span class="meta-info">Size: ~48.2 MB | Android 5.0+ (Older Phones)</span>
+                    <a href="NevoPlayer_32bit.apk" download="NevoPlayer_32bit.apk" class="btn btn-secondary">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+                        </svg>
+                        Download 32-Bit APK
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <a href="#" class="footer-logo">
+            <svg viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+            Nevo Player
+        </a>
+        <div class="footer-links">
+            <a href="#features" class="footer-link">Features</a>
+            <a href="#screenshots" class="footer-link">Screenshots</a>
+            <a href="#download" class="footer-link">Download</a>
+        </div>
+        <p>&copy; Nevo Player 2026. All rights reserved.</p>
+    </footer>
+
+    <!-- Light micro-interaction JavaScript -->
+    <script>
+        // Feature Cards Hover Effect
+        const cards = document.querySelectorAll('.feature-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+            });
+        });
+    </script>
+</body>
+</html>
