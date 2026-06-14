@@ -531,6 +531,88 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Download Counter Styles */
+        .download-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0 0.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        .counter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(123, 47, 190, 0.12);
+            border: 1px solid rgba(182, 102, 210, 0.25);
+            color: #d8b4fe;
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        .counter-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .counter-dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hero-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
         .download-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -751,6 +833,10 @@
             </svg>
         </div>
         <span class="badge">Stable Release v1.0.0</span>
+        <div class="hero-counter">
+            <span class="counter-dot"></span>
+            <span id="hero-total-count">...</span> Total Downloads
+        </div>
         <h1>Nevo Player</h1>
         <p class="hero-tagline">The Ultimate Media Player</p>
         <p>Experience ultra-smooth FHD/HD/SD video playback, an immersive music player with built-in visualizer, and instant network URL streaming on your Android device.</p>
@@ -861,30 +947,52 @@
         <div class="download-box">
             <span class="version-badge">Version 1.0.0 (Latest Stable)</span>
             <h2 class="section-title" style="font-size: 2.3rem;">Get Nevo Player Today</h2>
-            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1.5rem auto;">Select the architecture matching your Android device. For all devices built in the last 6-8 years, we highly recommend the 64-bit version.</p>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 1rem auto;">Select the architecture matching your Android device. For all devices built in the last 6-8 years, we highly recommend the 64-bit version.</p>
+            <div class="download-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-downloads">–</span>
+                    <span class="stat-label">Total Downloads</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="count-64bit">–</span>
+                    <span class="stat-label">64-Bit Downloads</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="count-32bit">–</span>
+                    <span class="stat-label">32-Bit Downloads</span>
+                </div>
+            </div>
             
             <div class="download-grid">
                 <!-- 64-bit -->
                 <div class="download-card">
                     <h4>64-Bit Version</h4>
                     <span class="meta-info">Size: ~54.5 MB | Android 8.0+ (Newer Phones)</span>
-                    <a href="NevoPlayer_64bit.apk" download="NevoPlayer_64bit.apk" class="btn btn-primary">
+                    <a href="NevoPlayer_64bit.apk" download="NevoPlayer_64bit.apk" class="btn btn-primary" id="btn-64bit" onclick="trackDownload('64bit')">
                         <svg viewBox="0 0 24 24">
                             <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
                         </svg>
                         Download 64-Bit APK
                     </a>
+                    <div class="counter-badge">
+                        <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+                        <span id="badge-64bit">...</span> downloads
+                    </div>
                 </div>
                 <!-- 32-bit -->
                 <div class="download-card">
                     <h4>32-Bit Version</h4>
                     <span class="meta-info">Size: ~48.2 MB | Android 5.0+ (Older Phones)</span>
-                    <a href="NevoPlayer_32bit.apk" download="NevoPlayer_32bit.apk" class="btn btn-secondary">
+                    <a href="NevoPlayer_32bit.apk" download="NevoPlayer_32bit.apk" class="btn btn-secondary" id="btn-32bit" onclick="trackDownload('32bit')">
                         <svg viewBox="0 0 24 24">
                             <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
                         </svg>
                         Download 32-Bit APK
                     </a>
+                    <div class="counter-badge">
+                        <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+                        <span id="badge-32bit">...</span> downloads
+                    </div>
                 </div>
             </div>
         </div>
@@ -919,6 +1027,54 @@
                 card.style.setProperty('--y', `${y}px`);
             });
         });
+
+        // ─── Download Counter (CountAPI - Free, No Signup) ───
+        const NAMESPACE = 'nevoplayer-sharoofkhan7839';
+        const KEY_64 = 'apk-64bit-downloads';
+        const KEY_32 = 'apk-32bit-downloads';
+        const API = 'https://api.counterapi.dev/v1';
+
+        function formatNum(n) {
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+            return n.toString();
+        }
+
+        function updateUI(count64, count32) {
+            const total = count64 + count32;
+            document.getElementById('count-64bit').textContent = formatNum(count64);
+            document.getElementById('count-32bit').textContent = formatNum(count32);
+            document.getElementById('total-downloads').textContent = formatNum(total);
+            document.getElementById('badge-64bit').textContent = formatNum(count64);
+            document.getElementById('badge-32bit').textContent = formatNum(count32);
+            document.getElementById('hero-total-count').textContent = formatNum(total);
+        }
+
+        async function fetchCounts() {
+            try {
+                const [r64, r32] = await Promise.all([
+                    fetch(`${API}/${NAMESPACE}/${KEY_64}/get`).then(r => r.json()),
+                    fetch(`${API}/${NAMESPACE}/${KEY_32}/get`).then(r => r.json())
+                ]);
+                updateUI(r64.count || 0, r32.count || 0);
+            } catch (e) {
+                // If API fails, show dashes
+                ['count-64bit','count-32bit','total-downloads','badge-64bit','badge-32bit','hero-total-count']
+                    .forEach(id => { document.getElementById(id).textContent = '–'; });
+            }
+        }
+
+        async function trackDownload(type) {
+            const key = type === '64bit' ? KEY_64 : KEY_32;
+            try {
+                const res = await fetch(`${API}/${NAMESPACE}/${key}/up`);
+                const data = await res.json();
+                // Refresh both counts after increment
+                fetchCounts();
+            } catch (e) { /* silent fail */ }
+        }
+
+        // Load counts on page load
+        fetchCounts();
     </script>
 </body>
 </html>
