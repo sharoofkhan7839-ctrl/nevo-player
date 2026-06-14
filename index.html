@@ -968,12 +968,12 @@
                 <div class="download-card">
                     <h4>64-Bit Version</h4>
                     <span class="meta-info">Size: ~54.5 MB | Android 8.0+ (Newer Phones)</span>
-                    <a href="NevoPlayer_64bit.apk" download="NevoPlayer_64bit.apk" class="btn btn-primary" id="btn-64bit" onclick="trackDownload('64bit')">
+                    <button class="btn btn-primary" id="btn-64bit" onclick="trackDownload('64bit', this)">
                         <svg viewBox="0 0 24 24">
                             <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
                         </svg>
                         Download 64-Bit APK
-                    </a>
+                    </button>
                     <div class="counter-badge">
                         <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
                         <span id="badge-64bit">...</span> downloads
@@ -983,12 +983,12 @@
                 <div class="download-card">
                     <h4>32-Bit Version</h4>
                     <span class="meta-info">Size: ~48.2 MB | Android 5.0+ (Older Phones)</span>
-                    <a href="NevoPlayer_32bit.apk" download="NevoPlayer_32bit.apk" class="btn btn-secondary" id="btn-32bit" onclick="trackDownload('32bit')">
+                    <button class="btn btn-secondary" id="btn-32bit" onclick="trackDownload('32bit', this)">
                         <svg viewBox="0 0 24 24">
                             <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
                         </svg>
                         Download 32-Bit APK
-                    </a>
+                    </button>
                     <div class="counter-badge">
                         <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
                         <span id="badge-32bit">...</span> downloads
@@ -1063,15 +1063,40 @@
             }
         }
 
-        async function trackDownload(type) {
+        async function trackDownload(type, btn) {
             const key = type === '64bit' ? KEY_64 : KEY_32;
+            const file = type === '64bit' ? 'NevoPlayer_64bit.apk' : 'NevoPlayer_32bit.apk';
+
+            // Show loading state
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<svg viewBox="0 0 24 24" style="animation:spin 1s linear infinite"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 14.03 20 13.07 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> Downloading...`;
+
+            // Fire counter first, THEN start download
             try {
-                const res = await fetch(`${API}/${NAMESPACE}/${key}/up`);
-                const data = await res.json();
-                // Refresh both counts after increment
-                fetchCounts();
+                await fetch(`${API}/${NAMESPACE}/${key}/up`);
             } catch (e) { /* silent fail */ }
+
+            // Trigger file download
+            const a = document.createElement('a');
+            a.href = file;
+            a.download = file;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // Restore button & update counts
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                fetchCounts();
+            }, 2000);
         }
+
+        // Spin animation for loading
+        const style = document.createElement('style');
+        style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+        document.head.appendChild(style);
 
         // Load counts on page load
         fetchCounts();
